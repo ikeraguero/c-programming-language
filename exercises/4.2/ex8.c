@@ -6,14 +6,14 @@ primeiro é denominado termo 0 (termo zero)*/
 #include <math.h>
 
 double calculate_cos(double x, int n) {
-    double cosine = 1; // The first term is always 1
-    int sign = -1; // Start with negative sign for the second term
-    int exponent = 2; // The second term is x^2
+    double cosine = 1;
+    int sign = -1;
+    int exponent = 2; 
     for (int i = 1; i <= n; i++) {
         double term = sign * pow(x, exponent) / tgamma(exponent + 1);
         cosine += term;
-        sign *= -1; // Alternate the sign
-        exponent += 2; // Increment the exponent for the next even term
+        sign *= -1; 
+        exponent += 2;
     }
     return cosine;
 }
