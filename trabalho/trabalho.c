@@ -48,6 +48,30 @@ void criar_conjunto(int *contador, int m) {
 }
 
 
+/*Inserir dados em um conjunto: o usuário deve informar o índice i do conjunto em que deseja fazer a
+inserção (0 ≤ i < contador); os demais requisitos devem ser respeitados:
+a) O usuário pode inserir vários valores na sequência; o processo se encerra quando é digitado o valor
+zero ou quando se atingiu a quantidade N (número de colunas da matriz); ✅*/
+void inserir_dados(int m, int n, int conjunto[m][n]) {
+    int valor, j;
+        for (j=n-1; j>=0; j--) {
+            do {
+            printf("Informe o valor que deseja adicionar à casa %i do conjunto %i: ", j, m);
+            scanf("%i", &valor);
+            } while (valor < 0);
+            conjunto[m][j] = valor;
+            if (valor == 0 || j == 0) {
+                if (valor==0) {
+                    printf("\nVoltando ao menu inicial! \n");
+                    printf("\n");
+                }
+                if (j==0) {
+                    printf("Limite máximo do conjunto atingido!\n");
+                }
+                break;
+            }
+}
+}
 
 int main() {
 
@@ -65,6 +89,23 @@ int main() {
         criar_conjunto(&contador, m);
         printf("%i", contador);
         opcao = 0;
+    }
+
+    if(opcao==2) {
+        if (contador < 10) {
+        int conj;
+        printf("Informe qual conjunto deseja preencher: ");
+        scanf("%i", &conj);
+        if (conj <=m) {
+        inserir_dados(conj, n, conjuntos);
+        }
+        else {
+            printf("Por favor informe um número válido!");
+        }
+        }
+        else {
+            printf("Número máximo de conjuntos atingidos");
+        }
     }
     } while (opcao != 9);   
 }
