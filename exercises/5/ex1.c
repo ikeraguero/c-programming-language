@@ -9,6 +9,7 @@ e) preencha o vetor: com 1 em V[i], caso i seja um quadrado perfeito, e com 0 no
 f) mostre os 100 valores contidos no vetor, uns ao lado dos outros*/
 
 #include <stdio.h>
+#include <math.h>
 
 int main() {
     int v[100];
@@ -17,9 +18,21 @@ int main() {
         v[i] = 71;
         printf("%i ", v[i]);
     }
+    printf("\n");
 
     for (int i=1; i <= 100; i++) {
         v[i] = i;
         printf("%i \n", v[i]);
     }
+    printf("\n");
+
+     for (int i = 0; i < 100; i++) {
+        int raiz = sqrt(v[i]);
+        if (raiz * raiz == v[i])
+            v[i] = 1;
+        else
+            v[i] = 0;
+        printf("%i ", v[i]);
+    }
+    printf("\n");
 }

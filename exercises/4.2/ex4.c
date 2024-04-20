@@ -21,6 +21,6 @@ int main() {
     printf("Digite o número de termos (n): ");
     scanf("%d", &n);
     double resultado = serie_gregory_leibniz(n);
-    printf("A soma dos primeiros %d termos da série de Gregory-Leibniz é: %lf\n", n, resultado);
+    printf("Soma dos primeiros %d termos da série de Gregory-Leibniz : %lf\n", n, resultado);
     return 0;
 }
