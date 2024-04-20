@@ -4,13 +4,22 @@
 /*A matriz deve ser inicializada com zeros, indicando que está vazia. O zero, portanto, não é considerado como
 um valor válido ✅*/ 
 
-int init_matriz(int m, int n, int matriz[m][n]) {
+void init_matriz(int m, int n, int matriz[m][n]) {
     for (int i=0; i<m; i++) {
         for (int j=0; j<n; j++) {
             matriz[i][j] = 0;
         }
     }
 }
+
+/*Além da matriz, o programa deve utilizar um contador para registrar quantidade de conjuntos. Portanto, o
+contador também deve estar zerado ao início do programa. ✅*/
+
+void init_contador(int contador) {
+    contador = 0;
+}
+
+
 
 int main() {
 
@@ -20,6 +29,7 @@ int main() {
     int contador;
 
     init_matriz(m, n, conjuntos);
+    init_contador(contador);
 
     printf("======================================\n");
     printf("Bem-vindo ao Gerenciador de Conjuntos!\n");
