@@ -43,6 +43,7 @@ void init_contador(int *contador) {
 }
 
 /* Criar um novo conjunto vazio: basta incrementar o contador, caso seja menor que M;✅*/
+/* Não deve ser possível criar mais do que M conjuntos ✅*/
 void criar_conjunto(int *contador, int m) {
     *contador < m ? (*contador)++ && printf("Novo conjunto criado. Total de conjuntos: %d\n", *contador) : printf("Número máximo de conjuntos atingido!\n");
 }
@@ -54,9 +55,13 @@ a) O usuário pode inserir vários valores na sequência; o processo se encerra 
 zero ou quando se atingiu a quantidade N (número de colunas da matriz); ✅*/
 void inserir_dados(int m, int n, int conjunto[m][n]) {
     int valor, j;
+    if(m==0) {
+        printf("Informe um número válido (1 a 10)\n ");
+        return;
+    }
         for (j=n-1; j>=0; j--) {
             do {
-            printf("Informe o valor que deseja adicionar à casa %i do conjunto %i: ", j, m);
+            printf("Informe o valor que deseja adicionar à casa %i do conjunto %i: ", j+1, m);
             scanf("%i", &valor);
             } while (valor < 0);
             conjunto[m-1][j] = valor;
@@ -71,6 +76,32 @@ void inserir_dados(int m, int n, int conjunto[m][n]) {
                 break;
             }
 }
+}
+
+int conjunto_existe(int conj, int contador) {
+    return conj <= contador ? 1 : 0;
+}
+
+void remove_conjunto(int *contador, int m, int n, int conjuntos[m][n], int conjunto_index) {
+    if (conjunto_index >= 0 && conjunto_index < *contador) {
+        for (int j = 0; j < n; j++) {
+            conjuntos[conjunto_index][j] = 0;
+        }
+
+        for (int i = conjunto_index + 1; i < *contador; i++) {
+            for (int j = 0; j < n; j++) {
+                conjuntos[i - 1][j] = conjuntos[i][j];
+            }
+        }
+
+        for (int j = 0; j < n; j++) {
+            conjuntos[*contador - 1][j] = 0;
+        }
+    (*contador)--;
+        printf("Conjunto %i removido com sucesso!\n", conjunto_index + 1);
+    } else {
+        printf("Índice do conjunto inválido!\n");
+    }
 }
 
 int main() {
@@ -100,14 +131,24 @@ int main() {
             int conj;
             printf("Informe qual conjunto deseja preencher: ");
             scanf("%i", &conj);
-            if (conj <= contador) {
+            if (conjunto_existe(conj, contador)) {
                 inserir_dados(conj, n, conjuntos);
             } else {
-                printf("Por favor informe um número válido!\n");
+                printf("Por favor informe um conjunto já criado!\n");
             }
             } else {
                 printf("Número máximo de conjuntos atingidos!\n");
             }
         }
+    if(opcao==3) {
+        int conj;
+        printf("Informe qual conjunto deseja remover: ");
+        scanf("%i", &conj);
+        if(conjunto_existe(conj, contador)) {
+            remove_conjunto(&contador, m, n, conjuntos, conj -1);
+        } else {
+                printf("Por favor informe um conjunto já criado!\n");
+        }
+    }
     } while (opcao != 9);   
 }
