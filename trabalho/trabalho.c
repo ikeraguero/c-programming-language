@@ -44,7 +44,7 @@ void init_contador(int *contador) {
 
 /* Criar um novo conjunto vazio: basta incrementar o contador, caso seja menor que M;✅*/
 void criar_conjunto(int *contador, int m) {
-    *contador < m ? *contador = *contador + 1 : printf("Número máximo de conjuntos atingido!");
+    *contador < m ? (*contador)++ && printf("Novo conjunto criado. Total de conjuntos: %d\n", *contador) : printf("Número máximo de conjuntos atingido!\n");
 }
 
 
@@ -59,7 +59,7 @@ void inserir_dados(int m, int n, int conjunto[m][n]) {
             printf("Informe o valor que deseja adicionar à casa %i do conjunto %i: ", j, m);
             scanf("%i", &valor);
             } while (valor < 0);
-            conjunto[m][j] = valor;
+            conjunto[m-1][j] = valor;
             if (valor == 0 || j == 0) {
                 if (valor==0) {
                     printf("\nVoltando ao menu inicial! \n");
@@ -80,32 +80,34 @@ int main() {
     int conjuntos[m][n];
     int opcao = 0, contador = 0;
 
-    do {
     init_matriz(m, n, conjuntos);
     init_contador(&contador);
+    do {
     init_program(&opcao);
+
+    if(opcao<=0 || opcao>9) {
+        printf("Por favor, insira um número válido!");
+    }
 
     if(opcao==1) {
         criar_conjunto(&contador, m);
-        printf("%i", contador);
+        printf("%i\n", contador);
         opcao = 0;
     }
 
     if(opcao==2) {
-        if (contador < 10) {
-        int conj;
-        printf("Informe qual conjunto deseja preencher: ");
-        scanf("%i", &conj);
-        if (conj <=m) {
-        inserir_dados(conj, n, conjuntos);
+       if (contador < m) {
+            int conj;
+            printf("Informe qual conjunto deseja preencher: ");
+            scanf("%i", &conj);
+            if (conj <= contador) {
+                inserir_dados(conj, n, conjuntos);
+            } else {
+                printf("Por favor informe um número válido!\n");
+            }
+            } else {
+                printf("Número máximo de conjuntos atingidos!\n");
+            }
         }
-        else {
-            printf("Por favor informe um número válido!");
-        }
-        }
-        else {
-            printf("Número máximo de conjuntos atingidos");
-        }
-    }
     } while (opcao != 9);   
 }
