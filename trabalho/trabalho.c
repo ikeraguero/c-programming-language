@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <unistd.h>
 
 /*O programa deve ficar em um ciclo de repetições, oferecendo um menu de texto com as seguintes opções
 ao usuário ✅*/
 void init_program(int *opcao) {
+    sleep(2);
     do {
         printf("======================================\n");
         printf("Bem-vindo ao Gerenciador de Conjuntos!\n");
@@ -44,7 +46,13 @@ void init_contador(int *contador) {
 /* Criar um novo conjunto vazio: basta incrementar o contador, caso seja menor que M;✅*/
 /* Não deve ser possível criar mais do que M conjuntos ✅*/
 void criar_conjunto(int *contador, int m) {
-    *contador < m ? (*contador)++ && printf("Novo conjunto criado. Total de conjuntos: %d\n", *contador) : printf("Número máximo de conjuntos atingido!\n");
+    if (*contador < m) {
+        (*contador)++;
+        printf("Novo conjunto criado! Total de conjuntos: %d\n", *contador);
+        printf("\n");
+    } else {
+        printf("Número máximo de conjuntos atingido!\n");
+    }
 }
 
 /*Inserir dados em um conjunto: o usuário deve informar o índice i do conjunto em que deseja fazer a
@@ -54,7 +62,9 @@ zero ou quando se atingiu a quantidade N (número de colunas da matriz); ✅*/
 void inserir_dados(int m, int n, int conjunto[m][n]) {
     int valor, j;
     if (m == 0) {
+        printf("\n");
         printf("Informe um número válido (1 a 10)\n ");
+        printf("\n");
         return;
     }
     for (j = n - 1; j >= 0; j--) {
@@ -65,7 +75,8 @@ void inserir_dados(int m, int n, int conjunto[m][n]) {
         conjunto[m - 1][j] = valor;
         if (valor == 0 || j == 0) {
             if (valor == 0) {
-                printf("\nVoltando ao menu inicial! \n");
+                printf("\nVoltando ao menu inicial... \n");
+                sleep(2);
                 printf("\n");
             }
             if (j == 0) {
@@ -73,6 +84,7 @@ void inserir_dados(int m, int n, int conjunto[m][n]) {
             }
             break;
         }
+    sleep(2);
     }
 }
 
@@ -209,6 +221,9 @@ void mostra_todos_conjuntos(int m, int n, int conjuntos[m][n], int *contador) {
     for(int i=1; i<=*contador; i++) {
         mostra_conjunto(m, n, conjuntos, contador, i);
     }
+    if(*contador==0) {
+        printf("Nenhum conjunto existente!\n");
+    }
 }
 
 /*Busca por um valor: dado um valor, deve-se mostrar os índices dos conjuntos que contenham esse valor;; ✅*/
@@ -246,12 +261,14 @@ int main() {
         init_program(&opcao);
 
         if (opcao <= 0 || opcao > 9) {
+            printf("\n");
             printf("Por favor, insira um número válido!\n");
+            printf("\n");
+
         }
 
         if (opcao == 1) {
             criar_conjunto(&contador, m);
-            printf("%i\n", contador);
             opcao = 0;
         }
 
@@ -298,5 +315,7 @@ int main() {
             mostra_indice(m, n, conjuntos, &contador);
         }
     } while (opcao != 9);
+    printf("Encerrando o programa...\n");
+    sleep(2); 
     return 0;
 }
