@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/* Estudantes: Iker Aguero Pires e Yasmim Bernardi */
 /*O programa deve ficar em um ciclo de repetições, oferecendo um menu de texto com as seguintes opções
 ao usuário ✅*/
 void init_program(int *opcao) {
