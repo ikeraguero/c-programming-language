@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include<unistd.h>
 
-void init_program(int *opcao) {
+int main() {
+    int opcao = 0;
     sleep(2);
     do {
         printf("======================================\n");
@@ -14,13 +15,8 @@ void init_program(int *opcao) {
         printf("[4] - Consultar músicas \n");
         printf("\n");
         printf("Selecione a opção que deseja: ");
-        scanf("%d", opcao);
+        scanf("%d", &opcao);
         printf("\n");
 
-    } while (*opcao <= 0 || *opcao > 4);
-}
-
-int main() {
-    int opcao = 0;
-    init_program(&opcao);
+    } while (opcao <= 0 || opcao > 4);
 }
