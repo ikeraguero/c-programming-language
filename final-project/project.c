@@ -1,6 +1,24 @@
 #include <stdio.h>
 #include<unistd.h>
 
+
+
+void adicionar_musica() {
+    printf("Adicionar\n");
+}
+
+void remover_musica() {
+    printf("Remover\n");
+}
+
+void listar_musicas() {
+    printf("Listar\n");
+}
+
+void consultar_musica(){
+    printf("Consultar\n");
+}
+
 int main() {
     int opcao = 0;
     sleep(2);
@@ -19,4 +37,17 @@ int main() {
         printf("\n");
 
     } while (opcao <= 0 || opcao > 4);
+
+    if(opcao==1) {
+        adicionar_musica();
+    }
+    if(opcao==2) {
+        remover_musica();
+    }
+    if(opcao==3) {
+        listar_musicas();
+    }
+    if(opcao==4) {
+        consultar_musica();
+    }
 }
