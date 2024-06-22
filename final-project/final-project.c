@@ -1,7 +1,26 @@
 #include <stdio.h>
 #include<unistd.h>
 
+typedef struct {
+    char nome[50];
+    char nacionalidade[20];
+} Artista;
 
+typedef struct 
+{
+    int dia;
+    int mes;
+    int ano;
+} Data;
+
+
+typedef struct {
+    char nome[50];
+    int duracao;
+    char estilo[20];
+    Artista artista;
+    Data data;
+} Musica;
 
 void adicionar_musica() {
     printf("Adicionar\n");
