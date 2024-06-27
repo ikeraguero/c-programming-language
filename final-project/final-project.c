@@ -20,10 +20,31 @@ typedef struct {
     char estilo[20];
     Artista artista;
     Data data;
+    int removido;
 } Musica;
 
+Musica *musicas = NULL;
+int total_musicas = 0;
+
 void adicionar_musica() {
-    printf("Adicionar\n");
+    Musica musica;
+    printf("Nome da música: ");
+    scanf(" %[^\n]", musica.nome);
+    printf("Duração (segundos): ");
+    scanf("%d", &musica.duracao);
+    printf("Estilo: ");
+    scanf(" %[^\n]", musica.estilo);
+    printf("Nome do artista: ");
+    scanf(" %[^\n]", musica.artista.nome);
+    printf("Nacionalidade do artista: ");
+    scanf(" %[^\n]", musica.artista.nacionalidade);
+    printf("Data de cadastramento (dd mm aaaa): ");
+    scanf("%d %d %d", &musica.data.dia, &musica.data.mes, &musica.data.ano);
+    musica.removido = 0;
+
+    musicas = (Musica *)realloc(musicas, (total_musicas + 1) * sizeof(Musica));
+    musicas[total_musicas] = musica;
+    total_musicas++;
 }
 
 void remover_musica() {
@@ -40,7 +61,7 @@ void consultar_musica(){
 
 int main() {
     int opcao = 0;
-    sleep(2);
+    sleep(1.5);
     do {
         printf("======================================\n");
         printf("Bem-vindo ao Gerenciador de Músicas\n");
