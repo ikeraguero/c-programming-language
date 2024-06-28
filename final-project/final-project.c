@@ -1,5 +1,7 @@
 #include <stdio.h>
-#include<unistd.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 
 typedef struct {
     char nome[50];
@@ -30,6 +32,14 @@ void adicionar_musica() {
     Musica musica;
     printf("Nome da música: ");
     scanf(" %[^\n]", musica.nome);
+
+    for (int i=0; i<total_musicas; i++) {
+        if(!strcmp(musica.nome, musicas[i].nome)) {
+            printf("Erro! Música já está registrada!\n");
+            return;
+        }
+    }
+
     printf("Duração (segundos): ");
     scanf("%d", &musica.duracao);
     printf("Estilo: ");
@@ -48,7 +58,19 @@ void adicionar_musica() {
 }
 
 void remover_musica() {
-    printf("Remover\n");
+    char remover[50];
+    printf("Qual registro deve ser apagado? (nome da música): ");
+    scanf(" %[^\n]", remover);
+
+    for (int i=0; i<total_musicas; i++) {
+        if(strcmp(remover, musicas[i].nome)) {
+            musicas[i].removido = 1;
+            return;
+        }
+    }
+
+    total_musicas--;
+    musicas = (Musica *)realloc(musicas, (total_musicas) * sizeof(Musica));
 }
 
 void listar_musicas() {
@@ -80,14 +102,18 @@ int main() {
 
     if(opcao==1) {
         adicionar_musica();
+        main();
     }
     if(opcao==2) {
         remover_musica();
+        main();
     }
     if(opcao==3) {
         listar_musicas();
+        main();
     }
     if(opcao==4) {
         consultar_musica();
+        main();
     }
 }
