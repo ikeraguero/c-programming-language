@@ -25,16 +25,13 @@ typedef struct {
     int removido;
 } Musica;
 
-Musica *musicas = NULL;
-int total_musicas = 0;
-
-void adicionar_musica() {
+void adicionar_musica(Musica **musicas, int *total_musicas) {
     Musica musica;
     printf("Nome da música: ");
     scanf(" %[^\n]", musica.nome);
 
-    for (int i=0; i<total_musicas; i++) {
-        if(!strcmp(musica.nome, musicas[i].nome)) {
+    for (int i=0; i<*total_musicas; i++) {
+        if(!strcmp(musica.nome, (*musicas)[i].nome)) {
             printf("Erro! Música já está registrada!\n");
             return;
         }
@@ -54,29 +51,29 @@ void adicionar_musica() {
     printf("\n");
     musica.removido = 0;
 
-    musicas = (Musica *)realloc(musicas, (total_musicas + 1) * sizeof(Musica));
-    musicas[total_musicas] = musica;
-    total_musicas++;
+    *musicas = (Musica *)realloc(musicas, (*total_musicas + 1) * sizeof(Musica));
+    (*musicas)[*total_musicas] = musica;
+    (*total_musicas)++;
 
 }
 
-void remover_musica() {
+void remover_musica(Musica *musicas, int *total_musicas) {
     char remover[50];
     printf("Qual registro deve ser apagado? (nome da música): ");
     scanf(" %[^\n]", remover);
 
-    for (int i=0; i<total_musicas; i++) {
-        if(!strcmp(remover, musicas[i].nome)) {
+    for (int i=0; i<*total_musicas; i++) {
+        if(!strcmp(remover,musicas[i].nome)) {
             musicas[i].removido = 1;
             return;
         }
     }
 
-    total_musicas--;
-    musicas = (Musica *)realloc(musicas, (total_musicas) * sizeof(Musica));
+    (*total_musicas)--;
+    musicas = (Musica *)realloc(musicas, (*total_musicas) * sizeof(Musica));
 }
 
-void listar_musicas() {
+void listar_musicas(Musica *musicas, int total_musicas) {
     printf("Listagem de Músicas Cadastradas \n");
     printf("\n");
     printf("Música               Artista              Nacionalidade        Cadastramento\n");
@@ -95,6 +92,9 @@ void consultar_musica(){
 
 int main() {
     int opcao = 0;
+    Musica *musicas = NULL;
+    int total_musicas = 0;
+
     sleep(1.5);
     do {
         printf("======================================\n");
@@ -113,15 +113,15 @@ int main() {
     } while (opcao <= 0 || opcao > 4);
 
     if(opcao==1) {
-        adicionar_musica();
+        adicionar_musica(&musicas, &total_musicas);
         main();
     }
     if(opcao==2) {
-        remover_musica();
+        remover_musica(musicas, &total_musicas);
         main();
     }
     if(opcao==3) {
-        listar_musicas();
+        listar_musicas(musicas, total_musicas);
         main();
     }
     if(opcao==4) {
