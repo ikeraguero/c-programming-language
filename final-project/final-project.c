@@ -51,7 +51,7 @@ void adicionar_musica(Musica **musicas, int *total_musicas) {
     printf("\n");
     musica.removido = 0;
 
-    *musicas = (Musica *)realloc(musicas, (*total_musicas + 1) * sizeof(Musica));
+    *musicas = (Musica *)realloc(*musicas, (*total_musicas + 1) * sizeof(Musica));
     (*musicas)[*total_musicas] = musica;
     (*total_musicas)++;
 
@@ -63,14 +63,13 @@ void remover_musica(Musica *musicas, int *total_musicas) {
     scanf(" %[^\n]", remover);
 
     for (int i=0; i<*total_musicas; i++) {
-        if(!strcmp(remover,musicas[i].nome)) {
+        if(!strcmp(remover, musicas[i].nome)) {
             musicas[i].removido = 1;
             return;
         }
     }
 
     (*total_musicas)--;
-    musicas = (Musica *)realloc(musicas, (*total_musicas) * sizeof(Musica));
 }
 
 void listar_musicas(Musica *musicas, int total_musicas) {
@@ -86,8 +85,24 @@ void listar_musicas(Musica *musicas, int total_musicas) {
     printf("\n");
 }
 
-void consultar_musica(){
-    printf("Consultar\n");
+void consultar_musica(Musica *musicas, int total_musicas){
+    char consulta[50];
+    printf("Qual música deseja consultar?: ");
+    scanf(" %[^\n]", consulta);
+    for(int i=0; i< total_musicas; i++) {
+        if(!strcmp(consulta, musicas[i].nome) && !musicas[i].removido) {
+            printf("Música: %s\n", musicas[i].nome);
+            printf("Duração: %d segundos\n", musicas[i].duracao);
+            printf("Estilo: %s\n", musicas[i].estilo);
+            printf("Artista: %s\n", musicas[i].artista.nome);
+            printf("Nacionalidade: %s\n", musicas[i].artista.nacionalidade);
+            printf("Data de Cadastramento: %02d/%02d/%04d\n", 
+                   musicas[i].data.dia, 
+                   musicas[i].data.mes, 
+                   musicas[i].data.ano);
+            printf("\n");
+        }
+    }
 }
 
 int main() {
@@ -96,7 +111,7 @@ int main() {
     int total_musicas = 0;
 
     sleep(1.5);
-    do {
+    while (1) {
         printf("======================================\n");
         printf("Bem-vindo ao Gerenciador de Músicas\n");
         printf("======================================\n");
@@ -105,27 +120,31 @@ int main() {
         printf("[2] - Remover música \n");
         printf("[3] - Listar músicas \n");
         printf("[4] - Consultar música \n");
+        printf("[5] - Sair \n");
         printf("\n");
         printf("Selecione a opção que deseja: ");
         scanf("%d", &opcao);
         printf("\n");
 
-    } while (opcao <= 0 || opcao > 4);
-
-    if(opcao==1) {
-        adicionar_musica(&musicas, &total_musicas);
-        main();
-    }
-    if(opcao==2) {
-        remover_musica(musicas, &total_musicas);
-        main();
-    }
-    if(opcao==3) {
-        listar_musicas(musicas, total_musicas);
-        main();
-    }
-    if(opcao==4) {
-        consultar_musica();
-        main();
+        switch (opcao) {
+            case 1:
+                adicionar_musica(&musicas, &total_musicas);
+                break;
+            case 2:
+                remover_musica(musicas, &total_musicas);
+                break;
+            case 3:
+                listar_musicas(musicas, total_musicas);
+                break;
+            case 4:
+                consultar_musica(musicas, total_musicas);
+                break;
+            case 5:
+                free(musicas);
+                return 0;
+            default:
+                printf("Opção inválida! Tente novamente.\n");
+                break;
+        }
     }
 }
