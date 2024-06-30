@@ -25,7 +25,7 @@ typedef struct {
     int removido;
 } Musica;
 
-void carregar_dados(const char *arquivo, Musica **musicas, int *total_musicas) {
+void carregar_dados(char *arquivo, Musica **musicas, int *total_musicas) {
     FILE *fp = fopen(arquivo, "r");
     if (fp == NULL) {
         printf("Arquivo não encontrado, iniciando com cadastro vazio.\n");
@@ -45,7 +45,7 @@ void carregar_dados(const char *arquivo, Musica **musicas, int *total_musicas) {
     fclose(fp);
 }
 
-void salvar_dados(const char *arquivo, Musica *musicas, int *total_musicas) {
+void salvar_dados(char *arquivo, Musica *musicas, int *total_musicas) {
     FILE *fp = fopen(arquivo, "w");
     if (fp == NULL) {
         printf("Erro ao salvar o arquivo.\n");
