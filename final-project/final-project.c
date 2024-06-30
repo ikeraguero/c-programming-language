@@ -25,6 +25,46 @@ typedef struct {
     int removido;
 } Musica;
 
+void carregar_dados(const char *arquivo, Musica **musicas, int *total_musicas) {
+    FILE *fp = fopen(arquivo, "r");
+    if (fp == NULL) {
+        printf("Arquivo não encontrado, iniciando com cadastro vazio.\n");
+        return;
+    }
+    fscanf(fp, "%d\n", total_musicas); // salvar no endereço
+    *musicas = (Musica *) malloc((*total_musicas) * sizeof(Musica));
+    for (int i = 0; i < *total_musicas; i++) {
+        fscanf(fp, "%49[^\n]\n", (*musicas)[i].nome);
+        fscanf(fp, "%d\n", &(*musicas)[i].duracao);
+        fscanf(fp, "%49[^\n]\n", (*musicas)[i].estilo);
+        fscanf(fp, "%49[^\n]\n", (*musicas)[i].artista.nome);
+        fscanf(fp, "%49[^\n]\n", (*musicas)[i].artista.nacionalidade);
+        fscanf(fp, "%d/%d/%d\n", &(*musicas)[i].data.dia, &(*musicas)[i].data.mes, &(*musicas)[i].data.ano);
+        (*musicas)[i].removido = 0;
+    }
+    fclose(fp);
+}
+
+void salvar_dados(const char *arquivo, Musica *musicas, int *total_musicas) {
+    FILE *fp = fopen(arquivo, "w");
+    if (fp == NULL) {
+        printf("Erro ao salvar o arquivo.\n");
+        return;
+    }
+    fprintf(fp, "%d\n", *total_musicas); // salvar o valor que está no endereço
+    for (int i = 0; i < *total_musicas; i++) {
+        if (!(musicas)[i].removido) {
+            fprintf(fp, "%s\n", musicas[i].nome);
+            fprintf(fp, "%d\n", musicas[i].duracao);
+            fprintf(fp, "%s\n", musicas[i].estilo);
+            fprintf(fp, "%s\n", musicas[i].artista.nome);
+            fprintf(fp, "%s\n", musicas[i].artista.nacionalidade);
+            fprintf(fp, "%d/%d/%d\n", musicas[i].data.dia, musicas[i].data.mes, musicas[i].data.ano);
+        }
+    }
+    fclose(fp);
+}
+
 void adicionar_musica(Musica **musicas, int *total_musicas) {
     Musica musica;
     printf("Nome da música: ");
@@ -47,13 +87,13 @@ void adicionar_musica(Musica **musicas, int *total_musicas) {
     scanf(" %[^\n]", musica.artista.nacionalidade);
     printf("Data de cadastramento (dd mm aaaa): ");
     scanf("%d %d %d", &musica.data.dia, &musica.data.mes, &musica.data.ano);
-    printf("Música cadastrada com sucesso! \n");
-    printf("\n");
     musica.removido = 0;
 
     *musicas = (Musica *)realloc(*musicas, (*total_musicas + 1) * sizeof(Musica));
     (*musicas)[*total_musicas] = musica;
     (*total_musicas)++;
+    printf("Música cadastrada com sucesso! \n");
+    printf("\n");
 
 }
 
@@ -61,15 +101,18 @@ void remover_musica(Musica *musicas, int *total_musicas) {
     char remover[50];
     printf("Qual registro deve ser apagado? (nome da música): ");
     scanf(" %[^\n]", remover);
+    
 
     for (int i=0; i<*total_musicas; i++) {
         if(!strcmp(remover, musicas[i].nome)) {
             musicas[i].removido = 1;
+            (*total_musicas)--;
+            printf("Música removida com sucesso! \n");
+            printf("\n");
             return;
         }
     }
-
-    (*total_musicas)--;
+    
 }
 
 void listar_musicas(Musica *musicas, int total_musicas) {
@@ -87,6 +130,7 @@ void listar_musicas(Musica *musicas, int total_musicas) {
 
 void consultar_musica(Musica *musicas, int total_musicas){
     char consulta[50];
+    int encontrada = 0;
     printf("Qual música deseja consultar?: ");
     scanf(" %[^\n]", consulta);
     for(int i=0; i< total_musicas; i++) {
@@ -101,7 +145,13 @@ void consultar_musica(Musica *musicas, int total_musicas){
                    musicas[i].data.mes, 
                    musicas[i].data.ano);
             printf("\n");
+            encontrada = 1;
+            break;
         }
+    }
+    if(!encontrada) {
+        printf("Música não encontrada!\n");
+        printf("\n");
     }
 }
 
@@ -109,6 +159,9 @@ int main() {
     int opcao = 0;
     Musica *musicas = NULL;
     int total_musicas = 0;
+    const char *arquivo = "musicas.txt";
+    carregar_dados(arquivo, &musicas, &total_musicas);
+
 
     sleep(1.5);
     while (1) {
@@ -140,6 +193,7 @@ int main() {
                 consultar_musica(musicas, total_musicas);
                 break;
             case 5:
+                salvar_dados(arquivo, musicas, &total_musicas);
                 free(musicas);
                 return 0;
             default:
