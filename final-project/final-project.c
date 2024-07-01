@@ -112,7 +112,7 @@ void remover_musica(Musica *musicas, int *total_musicas) {
             return;
         }
     }
-    
+    printf("Música não encontrada!\n");
 }
 
 void listar_musicas(Musica *musicas, int total_musicas) {
