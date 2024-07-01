@@ -8,13 +8,11 @@ typedef struct {
     char nacionalidade[20];
 } Artista;
 
-typedef struct 
-{
+typedef struct {
     int dia;
     int mes;
     int ano;
 } Data;
-
 
 typedef struct {
     char nome[50];
@@ -31,8 +29,13 @@ void carregar_dados(char *arquivo, Musica **musicas, int *total_musicas) {
         printf("Arquivo não encontrado, iniciando com cadastro vazio.\n");
         return;
     }
-    fscanf(fp, "%d\n", total_musicas); // salvar no endereço
-    *musicas = (Musica *) malloc((*total_musicas) * sizeof(Musica));
+    fscanf(fp, "%d\n", total_musicas);
+    *musicas = (Musica *)malloc((*total_musicas) * sizeof(Musica));
+    if (*musicas == NULL) {
+        printf("Erro ao alocar memória.\n");
+        fclose(fp);
+        exit(1);
+    }
     for (int i = 0; i < *total_musicas; i++) {
         fscanf(fp, "%49[^\n]\n", (*musicas)[i].nome);
         fscanf(fp, "%d\n", &(*musicas)[i].duracao);
@@ -45,15 +48,21 @@ void carregar_dados(char *arquivo, Musica **musicas, int *total_musicas) {
     fclose(fp);
 }
 
-void salvar_dados(char *arquivo, Musica *musicas, int *total_musicas) {
+void salvar_dados(char *arquivo, Musica *musicas, int total_musicas) {
     FILE *fp = fopen(arquivo, "w");
     if (fp == NULL) {
         printf("Erro ao salvar o arquivo.\n");
         return;
     }
-    fprintf(fp, "%d\n", *total_musicas); // salvar o valor que está no endereço
-    for (int i = 0; i < *total_musicas; i++) {
-        if (!(musicas)[i].removido) {
+    int count = 0;
+    for (int i = 0; i < total_musicas; i++) {
+        if (!musicas[i].removido) {
+            count++;
+        }
+    }
+    fprintf(fp, "%d\n", count);
+    for (int i = 0; i < total_musicas; i++) {
+        if (!musicas[i].removido) {
             fprintf(fp, "%s\n", musicas[i].nome);
             fprintf(fp, "%d\n", musicas[i].duracao);
             fprintf(fp, "%s\n", musicas[i].estilo);
@@ -70,8 +79,8 @@ void adicionar_musica(Musica **musicas, int *total_musicas) {
     printf("Nome da música: ");
     scanf(" %[^\n]", musica.nome);
 
-    for (int i=0; i<*total_musicas; i++) {
-        if(!strcmp(musica.nome, (*musicas)[i].nome)) {
+    for (int i = 0; i < *total_musicas; i++) {
+        if (!strcmp(musica.nome, (*musicas)[i].nome)) {
             printf("Erro! Música já está registrada!\n");
             return;
         }
@@ -89,22 +98,25 @@ void adicionar_musica(Musica **musicas, int *total_musicas) {
     scanf("%d %d %d", &musica.data.dia, &musica.data.mes, &musica.data.ano);
     musica.removido = 0;
 
-    *musicas = (Musica *)realloc(*musicas, (*total_musicas + 1) * sizeof(Musica));
+    Musica *temp = (Musica *)realloc(*musicas, (*total_musicas + 1) * sizeof(Musica));
+    if (temp == NULL) {
+        printf("Erro ao alocar memória.\n");
+        return;
+    }
+    *musicas = temp;
     (*musicas)[*total_musicas] = musica;
     (*total_musicas)++;
     printf("Música cadastrada com sucesso! \n");
     printf("\n");
-
 }
 
-void remover_musica(Musica *musicas, int *total_musicas) {
+void remover_musica(Musica *musicas, int total_musicas) {
     char remover[50];
     printf("Qual registro deve ser apagado? (nome da música): ");
     scanf(" %[^\n]", remover);
-    
 
-    for (int i=0; i<*total_musicas; i++) {
-        if(!strcmp(remover, musicas[i].nome)) {
+    for (int i = 0; i < total_musicas; i++) {
+        if (!strcmp(remover, musicas[i].nome)) {
             musicas[i].removido = 1;
             printf("Música removida com sucesso! \n");
             printf("\n");
@@ -115,7 +127,7 @@ void remover_musica(Musica *musicas, int *total_musicas) {
 }
 
 void listar_musicas(Musica *musicas, int total_musicas) {
-     int musicas_disponiveis = 0;
+    int musicas_disponiveis = 0;
 
     for (int i = 0; i < total_musicas; i++) {
         if (!musicas[i].removido) {
@@ -131,36 +143,36 @@ void listar_musicas(Musica *musicas, int total_musicas) {
     printf("\n");
     printf("Música               Artista              Nacionalidade        Cadastramento\n");
     printf("-------------        ---------------      ---------------      -------------  \n");
-    for(int i=0; i<total_musicas; i++) {
-        if(!musicas[i].removido) {
+    for (int i = 0; i < total_musicas; i++) {
+        if (!musicas[i].removido) {
             printf("%-20s %-20s %-20s %02d/%02d/%04d\n", musicas[i].nome, musicas[i].artista.nome, musicas[i].artista.nacionalidade, musicas[i].data.dia, musicas[i].data.mes, musicas[i].data.ano);
         }
     }
     printf("\n");
 }
 
-void consultar_musica(Musica *musicas, int total_musicas){
+void consultar_musica(Musica *musicas, int total_musicas) {
     char consulta[50];
     int encontrada = 0;
     printf("Qual música deseja consultar?: ");
     scanf(" %[^\n]", consulta);
-    for(int i=0; i< total_musicas; i++) {
-        if(!strcmp(consulta, musicas[i].nome) && !musicas[i].removido) {
+    for (int i = 0; i < total_musicas; i++) {
+        if (!strcmp(consulta, musicas[i].nome) && !musicas[i].removido) {
             printf("Música: %s\n", musicas[i].nome);
             printf("Duração: %d segundos\n", musicas[i].duracao);
             printf("Estilo: %s\n", musicas[i].estilo);
             printf("Artista: %s\n", musicas[i].artista.nome);
             printf("Nacionalidade: %s\n", musicas[i].artista.nacionalidade);
-            printf("Data de Cadastramento: %02d/%02d/%04d\n", 
-                   musicas[i].data.dia, 
-                   musicas[i].data.mes, 
+            printf("Data de Cadastramento: %02d/%02d/%04d\n",
+                   musicas[i].data.dia,
+                   musicas[i].data.mes,
                    musicas[i].data.ano);
             printf("\n");
             encontrada = 1;
             break;
         }
     }
-    if(!encontrada) {
+    if (!encontrada) {
         printf("Música não encontrada!\n");
         printf("\n");
     }
