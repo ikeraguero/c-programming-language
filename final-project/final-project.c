@@ -106,7 +106,6 @@ void remover_musica(Musica *musicas, int *total_musicas) {
     for (int i=0; i<*total_musicas; i++) {
         if(!strcmp(remover, musicas[i].nome)) {
             musicas[i].removido = 1;
-            (*total_musicas)--;
             printf("Música removida com sucesso! \n");
             printf("\n");
             return;
@@ -116,6 +115,18 @@ void remover_musica(Musica *musicas, int *total_musicas) {
 }
 
 void listar_musicas(Musica *musicas, int total_musicas) {
+     int musicas_disponiveis = 0;
+
+    for (int i = 0; i < total_musicas; i++) {
+        if (!musicas[i].removido) {
+            musicas_disponiveis++;
+        }
+    }
+
+    if (musicas_disponiveis == 0) {
+        printf("Não há músicas cadastradas.\n");
+        return;
+    }
     printf("Listagem de Músicas Cadastradas \n");
     printf("\n");
     printf("Música               Artista              Nacionalidade        Cadastramento\n");
