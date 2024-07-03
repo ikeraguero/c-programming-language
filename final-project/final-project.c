@@ -80,8 +80,9 @@ void adicionar_musica(Musica **musicas, int *total_musicas) {
     scanf(" %[^\n]", musica.nome);
 
     for (int i = 0; i < *total_musicas; i++) {
-        if (!strcmp(musica.nome, (*musicas)[i].nome)) {
+        if (!strcmp(musica.nome, (*musicas)[i].nome) && !(*musicas)[i].removido) {
             printf("Erro! Música já está registrada!\n");
+            adicionar_musica(musicas, total_musicas);
             return;
         }
     }
@@ -124,6 +125,8 @@ void remover_musica(Musica *musicas, int total_musicas) {
         }
     }
     printf("Música não encontrada!\n");
+    remover_musica(musicas, total_musicas);
+    return;
 }
 
 void listar_musicas(Musica *musicas, int total_musicas) {
@@ -175,6 +178,8 @@ void consultar_musica(Musica *musicas, int total_musicas) {
     if (!encontrada) {
         printf("Música não encontrada!\n");
         printf("\n");
+        consultar_musica(musicas, total_musicas);
+        return;
     }
 }
 
@@ -182,7 +187,7 @@ int main() {
     int opcao = 0;
     Musica *musicas = NULL;
     int total_musicas = 0;
-    const char *arquivo = "musicas.txt";
+    char *arquivo = "musicas.txt";
     carregar_dados(arquivo, &musicas, &total_musicas);
 
 
@@ -205,9 +210,11 @@ int main() {
         switch (opcao) {
             case 1:
                 adicionar_musica(&musicas, &total_musicas);
+                salvar_dados(arquivo, musicas, total_musicas);
                 break;
             case 2:
-                remover_musica(musicas, &total_musicas);
+                remover_musica(musicas, total_musicas);
+               salvar_dados(arquivo, musicas, total_musicas);
                 break;
             case 3:
                 listar_musicas(musicas, total_musicas);
@@ -216,7 +223,7 @@ int main() {
                 consultar_musica(musicas, total_musicas);
                 break;
             case 5:
-                salvar_dados(arquivo, musicas, &total_musicas);
+                salvar_dados(arquivo, musicas, total_musicas);
                 free(musicas);
                 return 0;
             default:
